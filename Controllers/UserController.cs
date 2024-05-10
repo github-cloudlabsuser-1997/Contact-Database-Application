@@ -10,11 +10,11 @@ namespace CRUD_application_2.Controllers
         // GET: User
         public ActionResult Index()
         {
-            // Implement the Index method here
+            // Implement the https://github.com/github-cloudlabsuser-1997/Contact-Database-Application.gitIndex method here
         }
  
         // GET: User/Details/5
-        public ActionResult Details(int iduser)
+        public ActionResult Details(int idusr)
         {
             // Implement the details method here
         }
