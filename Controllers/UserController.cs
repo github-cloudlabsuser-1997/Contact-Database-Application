@@ -10,26 +10,40 @@ namespace CRUD_application_2.Controllers
         // GET: User
         public ActionResult Index()
         {
-            // Implement the https://github.com/github-cloudlabsuser-1997/Contact-Database-Application.gitIndex method here
+            return View(userlist);
         }
  
         // GET: User/Details/5
         public ActionResult Details(int idus)
-        {
-            // Implement the details method here
+        {           
+                // This method is responsible for displaying the details of a user with the specified ID.
+                // It retrieves the user from the userlist based on the provided ID and passes it to the Details view.
+                // If no user is found with the provided ID, it returns a HttpNotFoundResult.
+                var user = userlist.FirstOrDefault(u => u.Id == idus);
+                if (user == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(user);           
         }
  
         // GET: User/Create
         public ActionResult Create()
         {
-            //Implement the Create method here
+            var user = new User();
+            return View(user);
         }
  
         // POST: User/Create
         [HttpPost]
         public ActionResult Create(User user)
-        {
-            // Implement the Create method (POST) here
+        {            
+            if (ModelState.IsValid)
+            {
+                userlist.Add(user);
+                return RedirectToAction("Index");
+            }
+            return View(user);
         }
  
         // GET: User/Edit/5
@@ -37,6 +51,12 @@ namespace CRUD_application_2.Controllers
         {
             // This method is responsible for displaying the view to edit an existing user with the specified ID.
             // It retrieves the user from the userlist based on the provided ID and passes it to the Edit view.
+            var user = userlist.FirstOrDefault(u => u.Id == id);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+            return View(user);
         }
  
         // POST: User/Edit/5
@@ -48,19 +68,40 @@ namespace CRUD_application_2.Controllers
             // If successful, it redirects to the Index action to display the updated list of users.
             // If no user is found with the provided ID, it returns a HttpNotFoundResult.
             // If an error occurs during the process, it returns the Edit view to display any validation errors.
+
+            var userReceived = userlist.FirstOrDefault(u => u.Id == id);
+            if (user.Id == userReceived.Id)
+            {
+                userReceived.Name = user.Name;
+                userReceived.Email = user.Email;
+            }            
+            return View(userReceived);
         }
  
         // GET: User/Delete/5
         public ActionResult Delete(int id)
-        {
-            // Implement the Delete method here
+        {         
+            var user = userlist.FirstOrDefault(u => u.Id == id);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+            userlist.Remove(user);
+            return RedirectToAction("Index");
         }
  
         // POST: User/Delete/5
         [HttpPost]
         public ActionResult Delete(int id, FormCollection collection)
-        {
-            // Implement the Delete method (POST) here
+        {            
+            var user = userlist.FirstOrDefault(u => u.Id == id);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+            userlist.Remove(user);
+            return RedirectToAction("Index");
         }
     }
 }
+
