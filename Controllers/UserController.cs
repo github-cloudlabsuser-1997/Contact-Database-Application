@@ -10,14 +10,14 @@ namespace CRUD_application_2.Controllers
         // GET: User
         public ActionResult Index()
         {
-            // Implement the https://github.com/github-cloudlabsuser-1997/Contact-Database-Application.gitIndex method here
+            // Implement the Index method here
             return View(userlist);
         }
- 
+
         // GET: User/Details/5
         public ActionResult Details(int id)
         {
-            // Implement the details method here
+            // Implement the Details method here
             var user = userlist.FirstOrDefault(x => x.Id == id);
             if (user == null)
             {
@@ -25,14 +25,14 @@ namespace CRUD_application_2.Controllers
             }
             return View(user);
         }
- 
+
         // GET: User/Create
         public ActionResult Create()
         {
-            //Implement the Create method here
+            // Implement the Create method here
             return View();
         }
- 
+
         // POST: User/Create
         [HttpPost]
         public ActionResult Create(User user)
@@ -52,7 +52,27 @@ namespace CRUD_application_2.Controllers
                 return View();
             }
         }
- 
+
+        // GET: User/Search
+        public ActionResult Search(string searchTerm)
+        {
+            // Implement the Search method here
+            var searchResults = userlist.Where(u => u.Name.Contains(searchTerm)).ToList();
+            return View(searchResults);
+        }
+
+        public ActionResult DeleteConfirmed(int id)
+        {
+            // Logic to delete the user from the list
+            var user = userlist.FirstOrDefault(u => u.Id == id);
+            if (user != null)
+            {
+                userlist.Remove(user);
+            }
+
+            // Redirect to the Index action after deletion
+            return RedirectToAction("Index");
+        }
         // GET: User/Edit/5
         public ActionResult Edit(int id)
         {
@@ -69,7 +89,7 @@ namespace CRUD_application_2.Controllers
             // If a user is found, pass the user to the Edit view
             return View(user);
         }
- 
+
         // POST: User/Edit/5
         [HttpPost]
         public ActionResult Edit(int id, User user)
@@ -105,7 +125,7 @@ namespace CRUD_application_2.Controllers
                 return View(user);
             }
         }
- 
+
         // GET: User/Delete/5
         public ActionResult Delete(int id)
         {
@@ -122,7 +142,7 @@ namespace CRUD_application_2.Controllers
             // If a user is found, pass the user to the Delete view
             return View(user);
         }
- 
+
         // POST: User/Delete/5
         [HttpPost]
         public ActionResult Delete(int id, FormCollection collection)
