@@ -31,7 +31,7 @@ jobs:
 
     # Step 5: Publish the application
     - name: Publish the application
-      run: dotnet publish -c Release -o -0 D:\a\MyMvcApp-Contact-Databse-Application\MyMvcApp-Contact-Databse-Application\bin\Release\net8.0\MyMvcApp
+      run: dotnet publish -c Release -o D:\a\MyMvcApp-Contact-Databse-Application\MyMvcApp-Contact-Databse-Application\bin\Release\net8.0\MyMvcApp
 
    
   deploy:
