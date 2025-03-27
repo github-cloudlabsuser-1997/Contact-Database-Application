@@ -1,52 +1,57 @@
-name: Build and Deploy
+name: Build and Deploy MyMvcApp
 
 on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [14.x, 16.x, 18.x]
+    runs-on: windows-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
+    # Step 1: Checkout the code
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: ${{ matrix.node-version }}
+    # Step 2: Setup .NET Core
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '7.0' # Adjust this to match your .NET version
 
-      - name: Install dependencies
-        run: npm install
+    # Step 3: Restore dependencies
+    - name: Restore dependencies
+      run: dotnet restore
 
-      - name: Build application
-        run: npm run build
+    # Step 4: Build the application
+    - name: Build the application
+      run: dotnet build --configuration Release --no-restore
 
-      - name: Archive production artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: production-artifacts
-          path: build/
+    # Step 5: Publish the application
+    - name: Publish the application
+      run: dotnet publish -c Release -o -0 D:\a\MyMvcApp-Contact-Databse-Application\MyMvcApp-Contact-Databse-Application\bin\Release\net8.0\MyMvcApp
 
+    - name: Upload artifact for deployment job
+      uses: actions/upload-artifact@v4
+      with:
+        name: .net-app
+        path: D:\a\MyMvcApp-Contact-Databse-Application\MyMvcApp-Contact-Databse-Application\bin\Release\net8.0\MyMvcApp
   deploy:
+    runs-on: windows-latest
     needs: build
-    runs-on: ubuntu-latest
 
     steps:
-      - name: Download production artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: production-artifacts
+    # Step 1: Checkout the code
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Deploy to Azure Web App
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: 'Your-App-Name'
-          slot-name: 'production'
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+    # Step 2: Deploy to Azure Web App
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: 'MyMvcApp' # Replace with your Azure Web App name
+        slot-name: 'production'
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+        package: ./publish
